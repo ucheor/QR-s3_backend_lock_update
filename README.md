@@ -212,7 +212,7 @@ terraform init -migrate-state
 
 This command tells Terraform that the backend configuration has changed and that it should migrate the existing state to the newly configured backend.
 
-![terraform init migrate state](images/terraform%20migrate%20state.png)
+![terraform init migrate state](images/terraform_migrate_state.png)
 
 The lock has now been switched to Native S3 locking.
 
