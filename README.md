@@ -126,9 +126,16 @@ variable "key_name" {
 EOF
 
 ```
+This code will add a public portion of the keypair in your AWS account and download a private portion to your local file. Feel free to adjust the variable file as you see fit.
+
+**Now, we have to create the S3 bucket and the DynamoDB table to use for state file locking.**
+Although Terraform can automate provision of resources in AWS, we have to first set up resources related to the backend before running Terraform. This is because the backend needs to be set up and initialized prior to resource creation stage.
 
 
-To create a backend block file with the traditional method (for practice)
+
+
+
+To create a backend block file with the traditional method (for practice) 
 
 ```
 touch old_backend.tf
@@ -136,10 +143,29 @@ touch old_backend.tf
 cat <<EOF > old_backend.tf
 terraform {
   backend "s3" {
-    bucket         = "magnolia-radish"
-    key            = "staging/terraform.tfstate"
+    bucket         = "magnolia-radish" #replace with your unique bucket name
+    key            = "staging/terraform.tfstate" #create a folder named "staging" in your S3 bucket
     region         = "us-east-1"
-    dynamodb_table = "magnolia"
+    dynamodb_table = "magnolia" #replace with your dynamoDB table name
+  }
+}
+EOF
+```
+
+Please note that for the terraform code to be applied, both backend examples cannot be active at the same time. So activate/create the old_backend for the traditional method as above. When you are ready to practice switching to the new backend, make the old_backend inactive and activate the new backend.tf (code below)
+
+To create a backend block file with the new Native S3 lock method
+
+```
+touch backend.tf
+
+cat <<EOF > old_backend.tf
+terraform {
+  backend "s3" {
+    bucket         = "magnolia-radish" #replace with your unique bucket name
+    key            = "staging/terraform.tfstate" #confirm you have a folder named "staging" in your S3 bucket
+    region         = "us-east-1"
+    use_lockfile   = true
   }
 }
 EOF
