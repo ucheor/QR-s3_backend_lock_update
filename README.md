@@ -75,7 +75,7 @@ touch provider.tf keypair.tf variable.tf output.tf
 Add terraform code to keypair.tf, provider.tf, output.tf and variable.tf
 
 ```
-cat <<EOF > keypair.tf
+cat <<'EOF' > keypair.tf
 resource "tls_private_key" "magnolia-key" {
   algorithm = "RSA"
   rsa_bits = 2048
@@ -88,7 +88,7 @@ resource "aws_key_pair" "magnolia-key-public" {
 
 resource "local_file" "magnolia-key-private" {
   filename = "${var.key_name}.pem"
-  file_permission = 700
+  file_permission = "0700"
   content = tls_private_key.magnolia-key.private_key_pem
 }
 EOF
@@ -269,3 +269,4 @@ For teams managing dozens or hundreds of state files, this migration can meaning
 ---
 
 *Have you made this migration already? I'd love to hear about your experience in the comments—what challenges did you encounter, and what benefits have you realized?*
+
