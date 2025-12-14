@@ -72,7 +72,7 @@ cd backend
 ```
 touch provider.tf keypair.tf variable.tf output.tf
 ```
-Add terraform code to keypair.tf, provider.tf, output.tf and variable.tf
+Add terraform code to keypair.tf
 
 ```
 cat <<'EOF' > keypair.tf
@@ -93,6 +93,10 @@ resource "local_file" "magnolia-key-private" {
 }
 EOF
 
+```
+Add terraform code to provider.tf
+
+```
 cat <<EOF > provider.tf
 terraform {
   required_providers {
@@ -108,13 +112,19 @@ provider "aws" {
   region  = var.region
 }
 EOF
+```
+Add terraform code to output.tf
 
+```
 cat <<EOF > output.tf
 output "key_name" {
   value = aws_key_pair.magnolia-key-public.key_name
 }
 EOF
+```
+Add terraform code to variable.tf
 
+```
 cat <<EOF > variable.tf
 variable "region" {
   default = "us-east-1"
