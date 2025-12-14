@@ -131,8 +131,19 @@ This code will add a public portion of the keypair in your AWS account and downl
 **Now, we have to create the S3 bucket and the DynamoDB table to use for state file locking.**
 Although Terraform can automate provision of resources in AWS, we have to first set up resources related to the backend before running Terraform. This is because the backend needs to be set up and initialized prior to resource creation stage.
 
+Create S3 bucket, enable versioning and block public access. Update backend code with unique S3 bucket name.
 
+![Create S3 bucket](images/create%20s3%20bucket%201.png)
 
+Create a folder "staging" inside your bucket. Confirm folder name is same as in your code under "key" argument - see backend code below.
+
+![Create folder under your S3 bucket](images/create%20s3%20bucket%20folder.png)
+
+![Create folder under your S3 bucket](images/create%20s3%20bucket%20folder%202.png)
+
+Create DynamoDB table "magnolia" . Partition key is **LockID**
+
+![DynamoDB table](images/create%20dynamoDB%20table.png)
 
 
 To create a backend block file with the traditional method (for practice) 
@@ -152,14 +163,33 @@ terraform {
 EOF
 ```
 
-Please note that for the terraform code to be applied, both backend examples cannot be active at the same time. So activate/create the old_backend for the traditional method as above. When you are ready to practice switching to the new backend, make the old_backend inactive and activate the new backend.tf (code below)
-
-To create a backend block file with the new Native S3 lock method
+**Let's Go!!**
 
 ```
-touch backend.tf
+# initialize backend using the traditional DynamoDB table lock method
+terraform init
+```
+```
+# to see resources - 3 to be created 
+terraform plan
+```
+To create the AWS keypair and download the private pair to your local directory
 
-cat <<EOF > old_backend.tf
+```
+terraform apply
+```
+Review output and "yes" to agree
+
+Now, we have a state file saved on S3 bucket with a lock through the traditional DynamoDB table.
+
+For this project, we want to update the state file lock to switch to Native S3 lock. Create a backend state file as below after deactivating the old_backend file
+
+To replace old_backend.tf with new backend for S3 Native block, use code below. You can also adjust your old_backend file to remove dynamoDB agrument line and replace with "use_lockfile = true"
+
+```
+mv old_backend.tf backend.tf
+
+cat <<EOF > backend.tf
 terraform {
   backend "s3" {
     bucket         = "magnolia-radish" #replace with your unique bucket name
@@ -170,6 +200,24 @@ terraform {
 }
 EOF
 ```
+Remember to update bucket name and double check key/path as required.
+
+To configure terraform to switch to the new state file, we have to re-initialize the backend
+
+```
+terraform init -migrate-state
+```
+
+```
+terraform apply
+```
+"yes" to agree
+
+The lock has now been switched to Native S3 locking
+
+To confirm, while running a Terraform apply, you can have a look at the AWS S# bucket folder and should see the lock file appear briefly while the code is being applied.
+
+![verify S3 backend lock](images/s3%20bucket%20lock%20verification.png)
 
 ## Key Benefits of S3 Native Locking
 
