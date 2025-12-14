@@ -246,6 +246,8 @@ terraform destroy
 ```
 "yes" to agree
 
+That's it!!!
+
 ## Key Benefits of S3 Native Locking
 
 **Simplified Architecture**: One less service to manage means reduced operational overhead. Your state management becomes a single-service concern.
