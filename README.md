@@ -68,6 +68,12 @@ cd backend
 touch backend.tf provider.tf keypair.tf variable.tf output.tf
 ```
 
+```
+This is the text that users can copy with one click.
+It can span multiple lines.
+```
+
+
 ## Key Benefits of S3 Native Locking
 
 **Simplified Architecture**: One less service to manage means reduced operational overhead. Your state management becomes a single-service concern.
