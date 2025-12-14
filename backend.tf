@@ -1,3 +1,5 @@
+/*
+
 terraform {
   backend "s3" {
     bucket         = "magnolia-radish"
@@ -6,3 +8,5 @@ terraform {
     use_lockfile = true
   }
 }
+
+*/

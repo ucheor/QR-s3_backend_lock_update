@@ -1,4 +1,3 @@
-/*
 terraform {
   backend "s3" {
     bucket         = "magnolia-radish"
@@ -7,4 +6,3 @@ terraform {
     dynamodb_table = "magnolia"
   }
 }
-*/
