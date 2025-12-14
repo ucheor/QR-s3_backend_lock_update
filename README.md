@@ -208,13 +208,7 @@ To configure terraform to switch to the new state file, we have to re-initialize
 terraform init -migrate-state
 ```
 
-![terraform migrate state file](images/terraform%20migrate%20state.png)
-
-This command tells Terraform that the backend configuration has changed and that it should migrate the existing state to the newly configured backend.
-
-![terraform init migrate state](images/terraform_migrate_state.png)
-
-The lock has now been switched to Native S3 locking.
+This command tells Terraform that the backend configuration has changed and that it should migrate the existing state to the newly configured backend. The lock has now been switched to Native S3 locking.
 
 ```
 terraform apply
