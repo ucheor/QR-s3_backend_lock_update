@@ -37,7 +37,7 @@ In this quick refresh, we go over steps to migrate existing terraform backend sc
 S3 introduced native state locking support that eliminates the need for DynamoDB entirely. Instead of using a separate database, S3 leverages its own native object locking mechanisms to prevent concurrent state modifications.
 
 The new configuration is refreshingly simple:
-
+```
 terraform {
   backend "s3" {
     bucket         = "magnolia-radish"
@@ -46,7 +46,7 @@ terraform {
     use_lockfile = true
   }
 }
-
+```
 ## Steps:
 To demonstrate, we will create a tradititional AWS S3 lock with DynamoDB, then after initializing the backend using the traditional method, we will go ahead and switch to the native S3 bucket locking. Feel free to skip to the S3 Native locking if you already have a traditional backend resource you want to practice on. Remember to back up files when working on critical files and resources. Always test before implementing!
 
