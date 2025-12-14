@@ -2,7 +2,12 @@
 
 If you've been managing cloud infrastructure with Terraform, you're probably familiar with the classic AWS backend setup: an S3 bucket for state storage and a DynamoDB table for state locking.
 
-**S3 now offers native locking capabilities that can simplify your infrastructure**.
+## Why is State Management important in Terraform?
+
+The state file captures a record of resources, tracks resources  and enables Terraform to manage deployed resources. It is important to store the state file in a safe place preferably with a functionalty to enables versioning. This way, anytime Terraform needs to update or configure resources, it has a reference for what is already deplyed (current state) and the desired/requested state.
+
+Storing terraform in a centralized location enables team access to the files and improves collaboration. While this is desirable, what happens when multiple team members are woring on the same file at the same time? If this happens, there is a chance of infrastructure deployment conflicts. This is why it is preferable lock the state file anytime it is in use.
+
 
 ## The Traditional Approach: S3 + DynamoDB
 
@@ -17,14 +22,19 @@ terraform {
   }
 }
 
-This approach works well, but it comes with some overhead:
+This approach comes with some overhead:
 - **Extra infrastructure to maintain**: You need to provision and manage a DynamoDB table
-- **Additional costs**: Even with on-demand pricing, you're paying for two services
+- **Additional costs**: Even with on-demand pricing, you're paying for two services - S3 bucket and DynamoDB table
 - **More complexity**: Extra IAM permissions, monitoring, and potential failure points
 
-## Enter S3 Native Locking
+**Most importantly, the traditional way of locking state files on AWS S3 bucket is being deprecated so this is a good time to start making the switch!!!**
 
-S3 introduced native state locking support that eliminates the need for DynamoDB entirely. Instead of using a separate database, S3 leverages its own object locking mechanisms to prevent concurrent state modifications.
+## Enter S3 Native Locking 
+**S3 now offers native locking capabilities that can simplify your infrastructure**.
+
+In this quick refresh, we go over steps to migrate existing terraform backend scripts over to the simplified native S3 backend locking. We will also validate our update to make sure it is indeed working.
+
+S3 introduced native state locking support that eliminates the need for DynamoDB entirely. Instead of using a separate database, S3 leverages its own native object locking mechanisms to prevent concurrent state modifications.
 
 The new configuration is refreshingly simple:
 
@@ -36,6 +46,10 @@ terraform {
     use_lockfile = true
   }
 }
+
+## Steps:
+To demonstrate, we will create a tradititional AWS S3 lock with DynamoDB, then after initializing the backend using the traditional method, we will go ahead and switch to the native S3 bucket locking. Feel free to skip to the S3 Native locking if you already have a traditional backend resource you want to practice on. Remember to back up files when working on critical files and resources. Always test before implementing!
+
 
 ## Key Benefits of S3 Native Locking
 

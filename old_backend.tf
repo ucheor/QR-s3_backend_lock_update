@@ -1,4 +1,5 @@
-/*terraform {
+/*
+terraform {
   backend "s3" {
     bucket         = "magnolia-radish"
     key            = "staging/terraform.tfstate"
