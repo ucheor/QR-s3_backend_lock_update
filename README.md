@@ -27,7 +27,7 @@ This approach comes with some overhead:
 - **Additional costs**: Even with on-demand pricing, you're paying for two services - S3 bucket and DynamoDB table
 - **More complexity**: Extra IAM permissions, monitoring, and potential failure points
 
-**Most importantly, the traditional way of locking state files on AWS S3 bucket is being deprecated so this is a good time to start making the switch!!!**
+**Most importantly, the traditional way of locking state files on AWS S3 bucket is being deprecated so this is a good time to start making the switch!!! You will need Terraform version 1:10 and above to use the S3 Native Locking**
 
 ## Enter S3 Native Locking 
 **S3 now offers native locking capabilities that can simplify your infrastructure**.
@@ -149,7 +149,7 @@ This code will add a public portion of the keypair in your AWS account and downl
 **Now, we have to create the S3 bucket and the DynamoDB table to use for state file locking.**
 Although Terraform can automate provision of resources in AWS, we have to first set up resources related to the backend before running Terraform. This is because the backend needs to be set up and initialized prior to resource creation stage.
 
-Create S3 bucket, enable versioning and block public access. Update backend code with unique S3 bucket name.
+Create S3 bucket, enable versioning and block public access. Versioning is important for lockfiles to work correctly. Update backend code with unique S3 bucket name.
 
 ![Create S3 bucket](images/create%20s3%20bucket%201.png)
 
@@ -175,6 +175,7 @@ terraform {
     bucket         = "magnolia-radish" #replace with your unique bucket name
     key            = "staging/terraform.tfstate" #create a folder named "staging" in your S3 bucket
     region         = "us-east-1"
+    encrypt        = true
     dynamodb_table = "magnolia" #replace with your dynamoDB table name
   }
 }
@@ -213,6 +214,7 @@ terraform {
     bucket         = "magnolia-radish" #replace with your unique bucket name
     key            = "staging/terraform.tfstate" #confirm you have a folder named "staging" in your S3 bucket
     region         = "us-east-1"
+    encrypt        = true
     use_lockfile   = true
   }
 }
@@ -236,7 +238,7 @@ terraform apply
 "yes" to agree
 
 
-To confirm, while running a Terraform apply, you can have a look at the AWS S3 bucket folder and should see the lock file appear briefly while the code is being applied.
+To confirm, while running a Terraform apply, you can have a look at the AWS S3 bucket folder and should see the lock file appear briefly while the code is being applied. The lock file uses the same name as the state file with a .tflock extension.
 
 ![verify S3 backend lock](images/s3%20bucket%20lock%20verification.png)
 
