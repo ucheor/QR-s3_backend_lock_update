@@ -70,7 +70,7 @@ cd backend
 ```
 
 ```
-touch backend.tf provider.tf keypair.tf variable.tf output.tf
+touch provider.tf keypair.tf variable.tf output.tf
 ```
 Add terraform code to keypair.tf, provider.tf, output.tf and variable.tf
 
