@@ -54,13 +54,19 @@ In this example, we will be using terraform code that created an AWS key pair. Y
 
 Create the folder **backend**
 
-```mkdir backend```
+```
+mkdir backend
+```
 
 Create terraform files inside your new folder
 
-```cd backend```
+```
+cd backend
+```
 
-```touch backend.tf provider.tf keypair.tf variable.tf output.tf```
+```
+touch backend.tf provider.tf keypair.tf variable.tf output.tf
+```
 
 ## Key Benefits of S3 Native Locking
 
